@@ -216,3 +216,30 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Verilator
+obj_dir/
+*.vcd
+*.fst
+
+# cocotb simulation build
+sim_build/
+results.xml
+*.xml
+
+# Vivado
+*.jou
+*.log
+*.str
+fpga/vivado/*.runs/
+fpga/vivado/*.cache/
+fpga/vivado/*.hw/
+fpga/vivado/*.ip_user_files/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+
