@@ -1,0 +1,23 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  lint-and-sim:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Verilator
+        run: sudo apt-get install -y verilator
+
+      - name: Install cocotb
+        run: pip install cocotb
+
+      - name: Run lint
+        run: make lint
+
+      - name: Run sim
+        run: make -B sim
