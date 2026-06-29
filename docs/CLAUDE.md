@@ -12,9 +12,23 @@
 ## Current State
 
 - **All 14 design decisions locked** (see Locked Design Decisions below)
-- **Next action:** Step 1 — create the GitHub repo and set up the project structure
-- **Current phase:** Pre-implementation (about to begin Week 1)
+- **Current phase:** Week 1 — Infrastructure setup (in progress)
 - **Summer target:** Steps 1–42 (OoO CPU + AI accelerator + FPGA bring-up + Tiny Tapeout candidate)
+
+### Completed so far
+- [x] Step 1: GitHub repo created — https://github.com/AashrithAttelli27/custom-soc-project (public)
+- [x] Full folder structure created (see Decision 13)
+- [x] `.gitignore` written (Python base + Verilator + Vivado + OS entries)
+- [x] `README.md` written
+- [x] `docs/CLAUDE.md` placed in repo
+
+### In progress
+- [ ] Step 2: Verilator installed and verified ✓ — write `rtl/cpu/fetch/counter.sv` and confirm lint passes
+- [ ] Step 3: cocotb installed ✓ — write `tb/cpu/fetch/test-counter.py` and confirm sim passes
+- [ ] Step 4: Write `Makefile` and `.github/workflows/ci.yml`, push, confirm CI goes green
+
+### Next action
+Write `rtl/cpu/fetch/counter.sv` — 8-bit counter using `logic` and `always_ff`. Run `verilator --lint-only -Wall rtl/cpu/fetch/counter.sv`. Zero warnings = environment proven.
 
 ---
 
@@ -24,7 +38,7 @@
 - **Team:** 2-person team (Aashrith + collaborator), rising junior ECE at UT Austin
 - **Goal:** Custom modular SoC built from scratch as a long-term portfolio project
 - **Target companies:** NVIDIA, AMD, Intel, Qualcomm, Google, Apple, Broadcom, Samsung, Micron, Amazon
-- **Target roles:** GPU architecture, cache controllers, memory systems, AI accelerators, SRAM/cache design, clock distribution, high-speed SerDes, DSP, PLLs, TPUs, custom CPUs, PCIe, Ethernet MAC
+- **Target roles:** CPU architecture, GPU architecture, cache controllers, memory systems, AI accelerators, SRAM/cache design, clock distribution, high-speed SerDes, DSP, PLLs, TPUs, custom CPUs, PCIe, Ethernet MAC
 - **Approach:** Human-led design, one decision at a time with full understanding of the reasoning. Claude assists with explanation and review — NOT code generation.
 
 ---
@@ -806,9 +820,18 @@ Each stage gets its own cocotb testbench before moving to the next.
 |-------|-------|-----------|
 | C | Strong (OS, computer architecture courses) | Drivers, bootloader, software stack — transfers directly |
 | C++ | Beginner | Needed for Verilator testbench harness — simple usage only |
-| Verilog | Intermediate (digital logic course, stopwatch on Basys3) | SystemVerilog is a superset — everything transfers |
+| Verilog | Intermediate (EE316 at UT Austin, Prof. Orshansky — Boolean algebra, combinational/sequential logic, FSMs, datapath components, ALU, register files, RTL design, timing; Labs: decoders/muxes, Basys3 FPGA, sequential logic, calculator, stopwatch/timer processor) | SystemVerilog is a superset — everything transfers |
 | Python | Beginner | cocotb testbenches — async/await + basic scripting needed |
 | Java | Experience | Largely irrelevant here, but shows language adaptability |
+
+### Key Verilog → SystemVerilog Syntax Changes (reference)
+| Verilog (old) | SystemVerilog (use this) | Notes |
+|---------------|--------------------------|-------|
+| `reg`, `wire` | `logic` | One type for everything |
+| `always @(posedge clk)` | `always_ff @(posedge clk)` | Explicit flip-flop intent |
+| `always @(*)` | `always_comb` | Explicit combinational intent |
+| Positional port connections | Named: `.port(signal)` | Never use positional |
+| No parameters | `parameter int WIDTH = 8` | Use for all configurable values |
 
 ### Learning Philosophy
 - **Human-led always.** Aashrith writes every line of RTL, testbench, and software. Claude explains, reviews, and advises — never generates production code.
@@ -905,4 +928,16 @@ End of week 1: working environment, automated CI, full tool understanding. Week 
 
 ---
 
-*Last updated: June 25, 2026 — All 14 decisions locked. Full roadmap documented. Ready to begin Step 1.*
+## Tool Workflow
+
+| Situation | Tool |
+|-----------|------|
+| Writing RTL, debugging, running lint/sim | Claude Code (`claude` in terminal inside repo) |
+| Design decisions, architecture questions, learning new concepts | Claude Chat or Cowork |
+| Updating CLAUDE.md after decisions | Claude Code (edits the file directly) or Cowork |
+
+Claude Code reads `docs/CLAUDE.md` automatically at session start — full context restored instantly. No pasting needed.
+
+---
+
+*Last updated: June 28, 2026 — Repo created, folder structure done. Currently on Week 1 infrastructure. Next: counter.sv → lint → cocotb test → Makefile → CI.*
